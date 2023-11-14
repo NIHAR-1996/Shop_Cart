@@ -1,3 +1,4 @@
+
 const productSearchBar = document.getElementById('search-input');
 const categoryBtns = document.querySelectorAll('.btn.category-btn');
 const productCheckbox = document.querySelectorAll('.filter-checkbox');
@@ -10,7 +11,7 @@ const homeSignupButtonDiv = document.getElementById('home-nav-btn');
 const addToCartBtn = document.querySelectorAll('.btn.add-to-cart-btn');
 const cartPageDiv = document.getElementById('cart-page');
 const paymentBtn = document.getElementById('payment-btn');
- 
+
 const fName = document.getElementById('fname');
 const lName = document.getElementById('lname');
 const email = document.getElementById('email');
@@ -26,18 +27,18 @@ const updatePasswordBtn = document.getElementById('save-password');
 const oldPassword = document.getElementById('old-password');
 const newPassword = document.getElementById('new-password');
 const updatePassword = document.getElementById('confirm-password');
- 
+
 let cartCardArray = [];
 let cartArray = [];
 let currentCategoryBtn = [];
 let ratingValue = 1;
 let productArray = [];
 let totalPrice = 0;
- 
-const repositoryName = "Shopping-Cart-1";
+
+const repositoryName = "Shop_Cart";
 // const repositoryName = '';
 const api = "https://fakestoreapi.com/products";
- 
+
 function getRandomColor(){
     const colors = ['red','green','blue','black','white'];
     return colors[Math.floor((Math.random() * colors.length))];
@@ -46,7 +47,7 @@ function getRandomSize(){
     const sizes = ['S','L','M','XL'];
     return sizes[Math.floor((Math.random() * sizes.length))];
 }
- 
+
 async function getProduct(){
     try {
         const product = await fetch(api);
@@ -66,7 +67,7 @@ async function getProduct(){
         console.error("Failed to load data",Error);
     }
 }
- 
+
 function checkItemFilter(data,filterChecklist,key){
     if(filterChecklist.length === 0){
         return data; 
@@ -121,7 +122,7 @@ function isInPriceRange(ele,price){
     }
     return false;
 }
- 
+
 function searchProduct(data){
     let searchText = productSearchBar.value.trim().toLowerCase();
     // m e n s
@@ -172,22 +173,22 @@ function setRating(productRatingDiv,rate){
         }
     }
 }
- 
+
 function addProductToShop(id, productContainer,title, description, image, size, color, price, category, rate, numberOfRatings){
     //product card
     const productCard = document.createElement("div");
     productCard.setAttribute("class", "product-card");
- 
+
     const productImageDiv = document.createElement("div");
     productImageDiv.setAttribute("class", "product-image");
     const img = document.createElement("img");
     img.setAttribute("src", image);
     img.setAttribute("alt", "pic");
     productImageDiv.appendChild(img);
- 
+
     const productInfo = document.createElement("div");
     productInfo.setAttribute("class", "product-info");
- 
+
     // title and description of the product
     const heading = document.createElement("h3");
     heading.setAttribute("class", "product-title");
@@ -196,7 +197,7 @@ function addProductToShop(id, productContainer,title, description, image, size, 
     p.setAttribute("class", "product-description");
     p.innerHTML = description;
     productInfo.append(heading, p);
- 
+
     // rating div created
     const productRatingDiv = document.createElement("div");
     productRatingDiv.setAttribute("class", "product-rating");
@@ -205,12 +206,12 @@ function addProductToShop(id, productContainer,title, description, image, size, 
     ratingCount.setAttribute("class", "rating-count");
     ratingCount.innerHTML = `(${numberOfRatings})`;
     productRatingDiv.append(ratingCount);
- 
+
     // product feature
     const productDetails = document.createElement("div");
     const productColor = document.createElement("span");
     const productSize = document.createElement("span");
- 
+
     if(category !== 'electronics' && category !== 'jewelery'){
         productColor.setAttribute("class", "product-color");
         productColor.innerHTML = `Color: ${color}`;
@@ -221,18 +222,18 @@ function addProductToShop(id, productContainer,title, description, image, size, 
     const productPrice = document.createElement("p");
     productPrice.setAttribute("class", "product-price");
     productPrice.innerHTML = `$${price}`;
- 
+
     const cartBtn = document.createElement("button");
     // cartBtn.setAttribute("value", "Add to Cart")
     cartBtn.setAttribute("class", "btn add-to-cart-btn");
     cartBtn.setAttribute("id",`${id}`);
     cartBtn.innerText = "Add to Cart";
- 
+
     productDetails.append(productColor, productSize);
     productInfo.append(productRatingDiv, productDetails, productPrice, cartBtn);
     productCard.append(productImageDiv, productInfo);
     productContainer.append(productCard);
- 
+
     /**
      * add product to localStorage in user cart
      * 1. console log each product while triger a event listener
@@ -243,11 +244,11 @@ function addProductToShop(id, productContainer,title, description, image, size, 
     let user = getUserSession();
     let userList = getUsers();
     let userFromStorage = getCurrentUserFromLocalStorage(userList,user);
-    if(window.location.pathname !== `/cart.html` && user.length !== 0 && userFromStorage !== '') {
+    if(window.location.pathname !== `/${repositoryName}/cart.html` && user.length !== 0 && userFromStorage !== '') {
         let p = document.querySelectorAll('.btn.add-to-cart-btn');
         addToCart(p,userList,userFromStorage);
     }
-    if(window.location.pathname === `/cart.html` && user.length !== 0 && userFromStorage !== ''){
+    if(window.location.pathname === `/${repositoryName}/cart.html` && user.length !== 0 && userFromStorage !== ''){
         let p = document.querySelectorAll('.btn.add-to-cart-btn');
         cartBtn.innerText = 'Remove From Cart';
         removeFromCart(p,userList,userFromStorage);
@@ -265,13 +266,13 @@ function addToCart(cartBtn,userList,userFromStorage){
                 currentUserCart.push(getCurrentProduct(currentId));
                 saveUser(userList);
             }else{
-                window.location.href = `/cart.html`;
+                window.location.href = `/${repositoryName}/cart.html`;
             }
         })
     })
     
 }
- 
+
 function getTotalPrice(cartItem){
     totalPrice = 0;
     cartItem.forEach((item)=>{
@@ -279,7 +280,7 @@ function getTotalPrice(cartItem){
     })
     return totalPrice;
 }
- 
+
 function removeFromCart(cartBtn,userList,userFromStorage){
     let currentUserCart = userFromStorage['cart']; // this need to be a functio
     cartBtn.forEach((btn)=>{
@@ -297,7 +298,7 @@ function removeFromCart(cartBtn,userList,userFromStorage){
                 }
             }
             saveUser(userList);
-            window.location.href = './cart.html';
+            window.location.href = `/${repositoryName}/cart.html`;
         })
     })
 }
@@ -318,7 +319,7 @@ function getCurrentProduct(id){
     })
     return currentProduct;
 }
- 
+
 function showProducts(data){
     const productContainer = document.getElementById('filtered-products');
     productContainer.innerHTML = '';
@@ -366,7 +367,7 @@ function getUserSession(){
 }
 function logout(){
     sessionStorage.removeItem('user');
-    window.location.href = `/index.html`;
+    window.location.href = `/${repositoryName}/index.html`;
 }
 function showMessage(message){
     messageAlert.style.display = 'block';
@@ -394,37 +395,37 @@ function createProfileNavMenu(currentUser){
     profileBtn.setAttribute('id','profile-btn');
     profileBtn.innerHTML = `${currentUser['fName']} ${currentUser['lName']}`;
     homeSignupButtonDiv.append(cartBtn,profileBtn);
- 
+
     // add event listner to profile
     profileBtn.addEventListener('click',(event)=>{
         setTimeout(()=>{
-            window.location.href = `/profile.html`;
+            window.location.href = `/${repositoryName}/profile.html`;
         },1000)
     })
     // add event listner to cart
     cartBtn.addEventListener('click',(event)=>{
         setTimeout(()=>{
-            window.location.href = `/cart.html`;
-        })
+            window.location.href = `/${repositoryName}/cart.html`;
+        },1000)
     })
 }
 window.onload = function(){
     // user restrictions pagefor cart and profile
-    if(window.location.pathname === `/cart.html` && !sessionStorage.getItem('user')){
-        window.location.href = `/index.html`;
+    if(window.location.pathname === `/${repositoryName}/cart.html` && !sessionStorage.getItem('user')){
+        window.location.href = `/${repositoryName}/index.html`;
     }
-    if(window.location.pathname === `/profile.html` && !sessionStorage.getItem('user')){
-        window.location.href = `/index.html`;
+    if(window.location.pathname === `/${repositoryName}/profile.html` && !sessionStorage.getItem('user')){
+        window.location.href = `/${repositoryName}/index.html`;
     }
     // user restrictions pagefor signup and login while user already loggedin
-    if(window.location.pathname === `/signup.html` && sessionStorage.getItem('user')){
-        window.location.href = `/index.html`;
+    if(window.location.pathname === `/${repositoryName}/signup.html` && sessionStorage.getItem('user')){
+        window.location.href = `/${repositoryName}/index.html`;
     }
-    if(window.location.pathname === `/login.html` && sessionStorage.getItem('user')){
-        window.location.href = `/index.html`;
+    if(window.location.pathname === `/${repositoryName}/login.html` && sessionStorage.getItem('user')){
+        window.location.href = `/${repositoryName}/index.html`;
     }
     // current path is index page
-    if(window.location.pathname === `/index.html`){
+    if(window.location.pathname === `/${repositoryName}/index.html`){
         
         // search product by searching
         productSearchBar.addEventListener('input',(event)=>{
@@ -481,14 +482,14 @@ window.onload = function(){
         loginButton.addEventListener('click',(event)=>{
             console.log(event.target);
             // redirect to login page
-            window.location.href = `/login.html`;
+            window.location.href = `/${repositoryName}/login.html`;
         })
         signupButton.addEventListener('click',(event)=>{
             console.log(event.target);
             // redirect to signup page
-            window.location.href = `/signup.html`
+            window.location.href = `/${repositoryName}/signup.html`
         })
- 
+
         let currentUser = getUserSession();
         if(currentUser['accessToken']){
             // user in the current session
@@ -501,8 +502,8 @@ window.onload = function(){
         })
         
     }
- 
-    if(window.location.pathname === `/profile.html` && sessionStorage.getItem('user')){
+
+    if(window.location.pathname === `/${repositoryName}/profile.html` && sessionStorage.getItem('user')){
         let currentUser = getUserSession();
         fName.value = currentUser['fName'];
         lName.value = currentUser['lName'];
@@ -524,7 +525,7 @@ window.onload = function(){
                     saveUserSession(user);
                     alert("Name update successfull redirecting to home page");
                     setTimeout(()=>{
-                        window.location.href = `/index.html`;
+                        window.location.href = `/${repositoryName}/index.html`;
                     },2000)
                 }
             }
@@ -562,7 +563,8 @@ window.onload = function(){
         })
     }
     // add product card to my cart page
-    if(window.location.pathname === `/cart.html` && sessionStorage.getItem('user')){
+    if(window.location.pathname === `/${repositoryName}/cart.html` && sessionStorage.getItem('user')){
+        
         let currentUser = getUserSession();
         if(currentUser['accessToken']){
             // user in the current session
@@ -588,8 +590,8 @@ window.onload = function(){
             e.preventDefault();
         }
     }
-    if(window.location.pathname === `/signup.html`){
- 
+    if(window.location.pathname === `/${repositoryName}/signup.html`){
+
         signupForm.addEventListener('click',function(event){
             console.log(event.target);
             event.preventDefault();
@@ -635,12 +637,12 @@ window.onload = function(){
                 saveUser(existingUsers);
             }
             setTimeout(function(){
-                window.location.href = `/login.html`;
+                window.location.href = `/${repositoryName}/login.html`;
             },1000);
         })
     }
-    if(window.location.pathname === `/login.html`){
- 
+    if(window.location.pathname === `/${repositoryName}/login.html`){
+
         loginForm.addEventListener('click', (event) =>{
             event.preventDefault();
             let userList = getUsers();
@@ -658,7 +660,7 @@ window.onload = function(){
                 saveUserSession(currentUser);  
                 // redirect to index page 
                 setTimeout(() => {
-                    window.location.href = `/index.html`;
+                    window.location.href = `/${repositoryName}/index.html`;
                 },1000)
             }else{
                 showMessage("You entered wrong inforamation");
@@ -667,11 +669,11 @@ window.onload = function(){
         })
     }
 }
- 
+
 // Razorpay integration
 var options = {
     key: "rzp_test_xV39ZNbgU1Du4V", // Enter the Key ID generated from the Dashboard
-    amount: JSON.parse(sessionStorage.getItem('checkOut')).price*100 , // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    amount: JSON.parse(sessionStorage.getItem('checkOut')).price*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
     currency: "INR",
     name: "MyShop Checkout",
     description: "This is your order", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
@@ -696,9 +698,8 @@ var options = {
         sessionStorage.removeItem('checkOut');
         JSON.stringify(sessionStorage.setItem('checkOut',{price:0}));
         // redirect to home page
-        location.href = `/index.html`;
+        location.href = `/${repositoryName}/index.html`;
     },
     image:
       "https://www.mintformations.co.uk/blog/wp-content/uploads/2020/05/shutterstock_583717939.jpg",
 };
- 
